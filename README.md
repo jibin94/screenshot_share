@@ -1,1 +1,3 @@
-# ShareScreenshot
+## Dependencies used
+- [screenshot](https://pub.dev/packages/screenshot) : This plugin is used to capture screenshots of your Flutter application programmatically. It allows you to capture the current screen content and save it as an image file. This can be useful for various purposes such as creating thumbnails, sharing screenshots, or saving images of important information within the app.
+- [esys_flutter_share_plus](https://pub.dev/packages/esys_flutter_share_plus): This plugin provides functionality for sharing content from your Flutter application to other apps installed on the device. It allows you to share text, images, files, or URLs to various platforms like social media, messaging apps, email, etc. This can enhance user engagement and provide users with the ability to easily share content from your app with their contacts or on different platforms.

@@ -1,10 +1,9 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:esys_flutter_share/esys_flutter_share.dart';
+import 'package:esys_flutter_share_plus/esys_flutter_share_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:screenshot/screenshot.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:screenshot/screenshot.dart';
 
 void main() => runApp(MyApp());
 
@@ -13,7 +12,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -23,7 +21,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -32,15 +30,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  File _imageFile;
+  File? _imageFile;
 
   //Create an instance of ScreenshotController
   ScreenshotController screenshotController = ScreenshotController();
 
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +42,11 @@ class _MyHomePageState extends State<MyHomePage> {
       controller: screenshotController,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(widget.title),
+          backgroundColor: Colors.blueAccent,
+          title: Text(
+            widget.title,
+            style: TextStyle(color: Colors.white),
+          ),
         ),
         body: Container(
           child: new Center(
@@ -58,8 +56,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 Column(
                   children: <Widget>[
                     Text(
-                      'Welcome',
-                      style: TextStyle(fontSize: 25, color: Colors.blue),
+                      'This a demo for screenshot share in flutter',
+                      style: TextStyle(fontSize: 18, color: Colors.blue),
+                      textAlign: TextAlign.center,
                     ),
                   ],
                 ),
@@ -68,30 +67,38 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.blueAccent,
           onPressed: () async {
-            _takeScreenshotandShare();
+            _takeScreenshotAndShare();
           },
           tooltip: 'Increment',
-          child: Icon(Icons.share),
+          child: Icon(Icons.share,color: Colors.white),
         ),
       ),
     );
   }
 
-  _takeScreenshotandShare() async {
+  _takeScreenshotAndShare() async {
     _imageFile = null;
     screenshotController
         .capture(delay: Duration(milliseconds: 10), pixelRatio: 2.0)
-        .then((File image) async {
-      setState(() {
-        _imageFile = image;
-      });
-      final directory = (await getApplicationDocumentsDirectory()).path;
-      Uint8List pngBytes = _imageFile.readAsBytesSync();
-      File imgFile = new File('$directory/screenshot.png');
-      imgFile.writeAsBytes(pngBytes);
-      print("File Saved to Gallery");
-      await Share.file('Anupam', 'screenshot.png', pngBytes, 'image/png');
+        .then((Uint8List? imageBytes) async {
+      // Assuming this is the correct type
+      // Proceed only if imageBytes is not null
+      if (imageBytes != null) {
+        setState(() {
+          // Assuming you have a way to display Uint8List directly,
+          // If not, you might need to write it to a file first
+          //_imageBytes = imageBytes; // Make sure _imageBytes is of type Uint8List?
+        });
+        final directory = (await getApplicationDocumentsDirectory()).path;
+        File imgFile = new File('$directory/screenshot.png');
+        await imgFile.writeAsBytes(imageBytes);
+        print("File Saved to Gallery");
+
+        await Share.file(
+            'screen share', 'screenshot.png', imageBytes, 'image/png');
+      }
     }).catchError((onError) {
       print(onError);
     });
